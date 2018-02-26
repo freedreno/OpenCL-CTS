@@ -410,7 +410,7 @@ static void PrintArch( void )
     sysctlbyname( "hw.cpusubtype", &type, &typeSize, NULL, 0 );
     vlog( "\tcpu subtype:\t%d\n", type );
     
-#elif defined( __linux__ )
+#elif defined( __linux__ ) && !defined(__aarch64__)
     int _sysctl(struct __sysctl_args *args );
 #define OSNAMESZ 100
     
