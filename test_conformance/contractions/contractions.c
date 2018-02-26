@@ -17,6 +17,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <values.h>
 
 #if !defined(_WIN32)
 #include <libgen.h>

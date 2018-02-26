@@ -577,33 +577,33 @@ static int ParseArgs( int argc, const char **argv )
 static void PrintArch( void )
 {
     vlog( "\nHost info:\n" );
-	vlog( "\tsizeof( void*) = %ld\n", sizeof( void *) );
-	#if defined( __ppc__ )
-		vlog( "\tARCH:\tppc\n" );
-	#elif defined( __ppc64__ )
-		vlog( "\tARCH:\tppc64\n" );
-	#elif defined( __PPC__ )
+    vlog( "\tsizeof( void*) = %zd\n", sizeof( void *) );
+    #if defined( __ppc__ )
+        vlog( "\tARCH:\tppc\n" );
+    #elif defined( __ppc64__ )
+        vlog( "\tARCH:\tppc64\n" );
+    #elif defined( __PPC__ )
                 vlog( "ARCH:\tppc\n" );
-	#elif defined( __i386__ )
-		vlog( "\tARCH:\ti386\n" );
-	#elif defined( __x86_64__ )
-		vlog( "\tARCH:\tx86_64\n" );
-	#elif defined( __arm__ )
-		vlog( "\tARCH:\tarm\n" );
-	#else
-		vlog( "\tARCH:\tunknown\n" );
-	#endif
-	
-#if defined( __APPLE__ )
-	int type = 0;
-	size_t typeSize = sizeof( type );
-	sysctlbyname( "hw.cputype", &type, &typeSize, NULL, 0 );
-	vlog( "\tcpu type:\t%d\n", type );
-	typeSize = sizeof( type );
-	sysctlbyname( "hw.cpusubtype", &type, &typeSize, NULL, 0 );
-	vlog( "\tcpu subtype:\t%d\n", type );
+    #elif defined( __i386__ )
+        vlog( "\tARCH:\ti386\n" );
+    #elif defined( __x86_64__ )
+        vlog( "\tARCH:\tx86_64\n" );
+    #elif defined( __arm__ )
+        vlog( "\tARCH:\tarm\n" );
+    #else
+        vlog( "\tARCH:\tunknown\n" );
+    #endif
 
-#elif defined( __linux__ )
+#if defined( __APPLE__ )
+    int type = 0;
+    size_t typeSize = sizeof( type );
+    sysctlbyname( "hw.cputype", &type, &typeSize, NULL, 0 );
+    vlog( "\tcpu type:\t%d\n", type );
+    typeSize = sizeof( type );
+    sysctlbyname( "hw.cpusubtype", &type, &typeSize, NULL, 0 );
+    vlog( "\tcpu subtype:\t%d\n", type );
+
+#elif defined( __linux__ ) && !defined(__aarch64__)
         int _sysctl(struct __sysctl_args *args );
         #define OSNAMESZ 100
 
@@ -657,21 +657,41 @@ static void PrintUsage( void )
 
 static void CL_CALLBACK notify_callback(const char *errinfo, const void *private_info, size_t cb, void *user_data)
 {
-    vlog( "%s  (%p, %ld, %p)\n", errinfo, private_info, cb, user_data );
+    vlog( "%s  (%p, %zd, %p)\n", errinfo, private_info, cb, user_data );
 }
 
 static void * align_malloc(size_t size, size_t alignment)
 {
-#if defined(_WIN32)
+#if defined(_WIN32) && defined(_MSC_VER)
     return _aligned_malloc(size, alignment);
-#elif  defined(__linux__) || defined(__APPLE__)
+#elif  defined(__linux__) || defined (linux) || defined(__APPLE__)
     void * ptr = NULL;
+#if defined(__ANDROID__)
+    ptr = memalign(alignment, size);
+    if( ptr )
+        return ptr;
+#else
     if (0 == posix_memalign(&ptr, alignment, size))
         return ptr;
-
+#endif
     return NULL;
+#elif defined(__MINGW32__)
+    return __mingw_aligned_malloc(size, alignment);
 #else
 #error "Please add support OS for aligned malloc"
+#endif
+}
+
+void   align_free(void * ptr)
+{
+#if defined(_WIN32) && defined(_MSC_VER)
+    _aligned_free(ptr);
+#elif  defined(__linux__) || defined (linux) || defined(__APPLE__)
+    return  free(ptr);
+#elif defined(__MINGW32__)
+    return __mingw_aligned_free(ptr);
+#else
+    #error "Please add support OS for aligned free"
 #endif
 }
 

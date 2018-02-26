@@ -556,14 +556,17 @@ static void PrintArch( void )
     vlog( "ARCH:\tx86_64\n" );
 #elif defined( __arm__ )
     vlog( "ARCH:\tarm\n" );
+// Add 64 bit support
+#elif defined(__aarch64__)
+    vlog( "ARCH:\taarch64\n" );
 #elif defined (_WIN32)
     vlog( "ARCH:\tWindows\n" );
 #else
 #error unknown arch
 #endif
-    
+
 #if defined( __APPLE__ )
-    
+
     int type = 0;
     size_t typeSize = sizeof( type );
     sysctlbyname( "hw.cputype", &type, &typeSize, NULL, 0 );
@@ -571,30 +574,30 @@ static void PrintArch( void )
     typeSize = sizeof( type );
     sysctlbyname( "hw.cpusubtype", &type, &typeSize, NULL, 0 );
     vlog( "cpu subtype:\t%d\n", type );
-    
-#elif defined( __linux__ )
+
+#elif defined( __linux__ ) && !defined(__aarch64__)
 #define OSNAMESZ 100
-    int _sysctl(struct __sysctl_args *args ); 
-    
-    struct __sysctl_args args; 
-    char osname[OSNAMESZ]; 
-    size_t osnamelth; 
-    int name[] = { CTL_KERN, KERN_OSTYPE }; 
-    memset(&args, 0, sizeof(struct __sysctl_args)); 
-    args.name = name; 
-    args.nlen = sizeof(name)/sizeof(name[0]); 
-    args.oldval = osname; 
-    args.oldlenp = &osnamelth; 
-    
-    osnamelth = sizeof(osname); 
-    
-    if (syscall(SYS__sysctl, &args) == -1) { 
-        vlog( "_sysctl error\n" ); 
-    } 
-    else { 
-        vlog("this machine is running %*s\n", osnamelth, osname); 
-    } 
-    
+    int _sysctl(struct __sysctl_args *args );
+
+    struct __sysctl_args args;
+    char osname[OSNAMESZ];
+    size_t osnamelth;
+    int name[] = { CTL_KERN, KERN_OSTYPE };
+    memset(&args, 0, sizeof(struct __sysctl_args));
+    args.name = name;
+    args.nlen = sizeof(name)/sizeof(name[0]);
+    args.oldval = osname;
+    args.oldlenp = &osnamelth;
+
+    osnamelth = sizeof(osname);
+
+    if (syscall(SYS__sysctl, &args) == -1) {
+        vlog( "_sysctl error\n" );
+    }
+    else {
+        vlog("this machine is running %*s\n", osnamelth, osname);
+    }
+
 #endif
 }
 
