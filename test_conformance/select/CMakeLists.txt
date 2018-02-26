@@ -8,9 +8,6 @@ add_executable(test_select
 )
 
 
-set_source_files_properties(
-        COMPILE_FLAGS -msse2)
-
 if(WIN32)
 set_source_files_properties(
         test_select.c

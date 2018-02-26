@@ -13,9 +13,6 @@ add_executable(test_thread_dimensions
 
 
 set_source_files_properties(
-        COMPILE_FLAGS -msse2)
-
-set_source_files_properties(
         main.c
 	test_thread_dimensions.c
 	../../test_common/harness/errorHelpers.c

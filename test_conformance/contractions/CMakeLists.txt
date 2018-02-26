@@ -7,9 +7,6 @@ add_executable(conformance_contractions
         ../../test_common/harness/rounding_mode.c
         ../../test_common/harness/kernelHelpers.c
 )
-set_source_files_properties(
-        contractions.c
-        COMPILE_FLAGS -msse)
 if(WIN32)
 set_source_files_properties(
         contractions.c    

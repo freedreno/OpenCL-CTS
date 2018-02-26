@@ -13,9 +13,6 @@ add_executable(test_profiling
 
 
 set_source_files_properties(
-        COMPILE_FLAGS -msse2)
-
-set_source_files_properties(
         main.c readArray.c writeArray.c readImage.c writeImage.c copy.c
         execute.c execute_multipass.c
         ../../test_common/harness/testHarness.c

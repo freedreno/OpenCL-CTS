@@ -15,9 +15,6 @@ add_executable(test_relationals
 
 
 set_source_files_properties(
-        COMPILE_FLAGS -msse2)
-
-set_source_files_properties(
         main.c
 	test_relationals.cpp
     test_comparisons_float.cpp

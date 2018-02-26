@@ -18,19 +18,6 @@ add_executable(conformance_bruteforce
 )
 
 
-set_source_files_properties(
-    FunctionList.c
-    Sleep.c
-    binary.c
-    binaryOperator.c
-    Utility.c
-    binary_i.c 	binary_two_results_i.c 	i_unary.c
-    macro_binary.c 	macro_unary.c 	mad.c
-    main.c 	reference_math.c 
-    ternary.c 	unary.c 	unary_two_results.c
-    unary_two_results_i.c unary_u.c
-    COMPILE_FLAGS -msse2)
-
 if (MSVC)
 set_source_files_properties(
     FunctionList.c

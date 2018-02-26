@@ -15,9 +15,6 @@ add_executable(test_multiples
 
 
 set_source_files_properties(
-        COMPILE_FLAGS -msse2)
-
-set_source_files_properties(
         main.c
 	test_multiple_contexts.c
 	../../test_common/harness/errorHelpers.c

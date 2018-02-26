@@ -64,13 +64,13 @@ if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # avoiding excess precision problems that cause tests like int2float
     # to falsely fail. -ffloat-store also works, but WG suggested
     # that sse would be better.
-    if(CMAKE_ARM_COMPILER OR ANDROID)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -std=gnu99")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
-    else(CMAKE_ARM_COMPILER OR ANDROID)
+    if(X86 OR X86_64)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -std=gnu99 -msse -mfpmath=sse")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -msse -mfpmath=sse")
-    endif(CMAKE_ARM_COMPILER OR ANDROID)
+    else(X86 OR X86_64)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -std=gnu99")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+    endif(X86 OR X86_64)
 else()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /D__SSE__")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D__SSE__")

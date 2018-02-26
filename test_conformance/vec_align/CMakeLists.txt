@@ -14,9 +14,6 @@ add_executable(test_vecalign
 
 
 set_source_files_properties(
-        COMPILE_FLAGS -msse2)
-
-set_source_files_properties(
 	globals.c
         main.c
         structs.c

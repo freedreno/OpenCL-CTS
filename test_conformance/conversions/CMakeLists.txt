@@ -46,10 +46,6 @@ set_source_files_properties(
         COMPILE_FLAGS -std=c99)
 
 
-set_source_files_properties(
-        Sleep.c test_conversions.c basic_test_conversions.c
-        COMPILE_FLAGS -msse2)
-
 if (ANDROID OR UNIX)
     if (NOT APPLE)
         list(APPEND CLConform_LIBRARIES m)

@@ -13,9 +13,6 @@ add_executable(test_vecstep
 
 
 set_source_files_properties(
-        COMPILE_FLAGS -msse2)
-
-set_source_files_properties(
 	globals.c
         test_step.c
         main.c
